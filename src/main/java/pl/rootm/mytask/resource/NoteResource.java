@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -30,7 +31,10 @@ public class NoteResource {
 
 
     @GetMapping("/all")
-    public ResponseEntity<HttpResponse<Note>> getNotes() {
+    public ResponseEntity<HttpResponse<Note>> getNotes() throws InterruptedException {
+
+     //   TimeUnit.SECONDS.sleep(3);
+
         return ResponseEntity.ok().body(noteService.getNotes());
     }
 

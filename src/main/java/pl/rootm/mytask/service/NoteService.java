@@ -14,8 +14,10 @@ import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -35,7 +37,7 @@ public class NoteService {
    public HttpResponse<Note> getNotes() {
        log.info("Pobranie wszystkich not");
        return HttpResponse.<Note>builder()
-               .notes(noteRepo.findAll())
+               .notes(noteRepo.findAll().stream().sorted(Comparator.comparing(Note::getCreateAt).reversed()).collect(Collectors.toList()))
                .message(noteRepo.count() > 0 ? noteRepo.count() + " notes retrived" : "No notes to dispaly")
                .status(OK)
                .statusCode(OK.value())
@@ -50,7 +52,7 @@ public class NoteService {
        List<Note> notes = noteRepo.findByLevel(level);
        log.info("Pobranie wszystkich not  by level", level);
        return HttpResponse.<Note>builder()
-               .notes(notes)
+               .notes(notes.stream().sorted(Comparator.comparing(Note::getCreateAt).reversed()).collect(Collectors.toList()))
                .message(notes.size() + "notes are of" + level + "importance")
                .status(OK)
                .statusCode(OK.value())
